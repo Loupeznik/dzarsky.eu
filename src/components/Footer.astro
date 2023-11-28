@@ -1,0 +1,31 @@
+---
+import { FiGithub } from "react-icons/fi";
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <p>&copy; {year}, Dominik Zarsky</p>
+  <a href="https://github.com/Loupeznik/dzarsky.eu" target="_blank"><FiGithub /> Source code</a>
+</footer>
+
+<style>
+  footer {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: white;
+    margin-top: auto;
+    place-content: space-between;
+  }
+  a {
+    text-decoration: none;
+    color: white;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+      color: rgb(var(--accent-light));
+    }
+  }
+</style>
