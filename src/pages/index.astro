@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { IntroductionCards } from "../components/IntroductionCards";
-import Footer from "../components/Footer.astro";
+import {Footer} from "../components/Footer.tsx";
 ---
 
 <Layout title="dzarsky.eu">
@@ -14,7 +14,7 @@ import Footer from "../components/Footer.astro";
     <ul role="list" class="link-card-grid">
       <IntroductionCards client:only />
     </ul>
-    <Footer />
+    <Footer client:only />
   </main>
 
   <style>
