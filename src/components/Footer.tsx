@@ -25,9 +25,9 @@ const RepoLink = styled.a`
 
 export const Footer = () => {
   return (
-<StyledFooter>
-  <p>&copy; {year}, Dominik Zarsky</p>
-  <RepoLink href="https://github.com/Loupeznik/dzarsky.eu" target="_blank"><FiGithub /> Source code</RepoLink>
-</StyledFooter>
+    <StyledFooter>
+      <p>&copy; {year}, Dominik Zarsky</p>
+      <RepoLink href="https://github.com/Loupeznik/dzarsky.eu" target="_blank"><FiGithub /> Source code</RepoLink>
+    </StyledFooter>
   );
 }

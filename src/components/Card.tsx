@@ -4,6 +4,7 @@ import styled from 'styled-components';
 interface Props {
 	title: string;
 	body: string;
+	blank?: boolean;
 	href?: string;
 	icon?: React.ReactNode;
 }
@@ -56,10 +57,10 @@ const LinkCardDescription = styled.p`
 	margin-top: 0.5rem;
 `;
 
-export const Card = ({ title, body, href, icon }: Props) => {
+export const Card = ({ title, body, href, icon, blank = true }: Props) => {
 	return (
 		<LinkCard>
-			<a href={href} target='_blank'>
+			<a href={href} target={blank ? "_blank" : undefined}>
 				<LinkCardTitle>
 					{icon} {title}
 				</LinkCardTitle>
