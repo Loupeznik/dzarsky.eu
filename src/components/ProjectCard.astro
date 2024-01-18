@@ -1,0 +1,198 @@
+---
+import {Octokit} from "octokit";
+import type {
+  GetRepositoryResponse,
+  ListRepositoryCommitsResponse,
+} from "../helpers/githubTypes";
+import {
+  FiCopy,
+  FiExternalLink,
+  FiGitCommit,
+  FiGitMerge,
+  FiGithub,
+  FiStar,
+  FiTag,
+} from "react-icons/fi";
+
+interface Props {
+  title: string;
+  repoUrl: string;
+  demoUrl?: string;
+  description?: string;
+}
+
+interface Project {
+  description: string;
+  commitCount: number;
+  stars?: number;
+  forks?: number;
+  language?: string;
+  createdAt?: string;
+  tags?: string[];
+  license?: string;
+}
+
+const {title, repoUrl, demoUrl, description} = Astro.props;
+
+const projectName = "better-wapi";
+
+const octokit = new Octokit();
+
+// Debug purposes only - to avoid rate limiting
+
+const repo = {
+  data: {
+    description: "A RESTful wrapper around the Wedos API written in Go",
+    stargazers_count: 1,
+    forks_count: 0,
+    language: "Go",
+    created_at: "2021-03-28T18:04:04Z",
+    topics: ["wapi", "api", "wedos"],
+    license: {
+      spdx_id: "MIT",
+    },
+  },
+} as GetRepositoryResponse;
+
+const commits = {
+  data: {},
+} as ListRepositoryCommitsResponse;
+
+/*
+const repo = (await octokit.request(
+  `GET /repos/loupeznik/${projectName}`
+)) as GetRepositoryResponse;
+
+const commits = (await octokit.request(
+  `GET /repos/loupeznik/${projectName}/commits`
+)) as ListRepositoryCommitsResponse;
+*/
+
+const project: Project = {
+  description: repo.data?.description ?? description ?? "",
+  stars: repo.data?.stargazers_count ?? 0,
+  forks: repo.data?.forks_count ?? 0,
+  commitCount: commits.data?.length ?? 0,
+  language: repo.data?.language ?? "",
+  createdAt: repo.data?.created_at,
+  tags: repo.data?.topics,
+  license: repo.data?.license?.spdx_id ?? "No license available",
+};
+---
+
+<li>
+  <div class="card">
+    <h2>{title}</h2>
+    <p>{project.description}</p>
+    <div>
+      <p class="icon-wrapper">Stars: {project.stars} <FiStar /></p>
+      <p class="icon-wrapper">Forks: {project.forks} <FiCopy /></p>
+      <p class="icon-wrapper">
+        Commits: {project.commitCount}
+        <FiGitCommit />
+      </p>
+      <p class="icon-wrapper">Language: {project.language}</p>
+      <p>
+        Created at: {
+          project.createdAt !== undefined &&
+            new Date(Date.parse(project.createdAt)).toLocaleDateString()
+        }
+      </p>
+      <p>License: {project.license}</p>
+    </div>
+
+    <div class="link-wrapper">
+      <span class="icon-wrapper"
+        ><FiGithub /><a href={repoUrl} target="_blank">Repo</a></span
+      >
+      {
+        demoUrl !== undefined && demoUrl !== "" && (
+          <span class="icon-wrapper">
+            <>
+              <FiExternalLink />
+              <a href={demoUrl} target="_blank">
+                Demo
+              </a>
+            </>
+          </span>
+        )
+      }
+    </div>
+
+    <div class="tag-wrapper">
+      {
+        project.tags?.map((tag) => (
+          <span class="tag">
+            <FiTag /> {tag}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</li>
+
+<style>
+  .tag-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    place-self: flex-end;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    background: #13151a 0% 0% no-repeat padding-box;
+    color: var(--color-white);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  li {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    background-color: #23262d;
+    background-image: none;
+    background-size: 400%;
+    border-radius: 7px;
+    background-position: 100%;
+  }
+
+  a {
+    color: var(--color-white);
+    text-decoration: none;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .icon-wrapper > svg {
+    margin-right: 0.25rem;
+    margin-left: 0.25rem;
+  }
+
+  .link-wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 25%;
+    place-self: flex-end;
+  }
+</style>

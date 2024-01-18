@@ -1,0 +1,20 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+---
+
+<ul role="list" class="link-card-grid">
+  <ProjectCard
+    title="Better WAPI"
+    repoUrl="http://github.com/loupeznik/better-wapi"
+    demoUrl="https://api.demo.better-wapi.dzarsky.eu/"
+  />
+</ul>
+
+<style>
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    gap: 2rem;
+    padding: 0;
+  }
+</style>

@@ -7,7 +7,9 @@ export const IntroductionCards = () => {
             <Card
                 title="Projects"
                 icon={<FiTool />}
-                body="In development..."
+                body="Featured projects."
+                href="/projects"
+                blank={false}
             />
             <Card
                 href="https://github.com/Loupeznik"
