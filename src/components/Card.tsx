@@ -59,7 +59,7 @@ const LinkCardDescription = styled.p`
 export const Card = ({ title, body, href, icon }: Props) => {
 	return (
 		<LinkCard>
-			<a href={href}>
+			<a href={href} target='_blank'>
 				<LinkCardTitle>
 					{icon} {title}
 				</LinkCardTitle>
