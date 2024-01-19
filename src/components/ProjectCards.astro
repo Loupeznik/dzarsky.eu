@@ -6,14 +6,45 @@ import ProjectCard from "./ProjectCard.astro";
   <ProjectCard
     title="Better WAPI"
     repoUrl="http://github.com/loupeznik/better-wapi"
-    demoUrl="https://api.demo.better-wapi.dzarsky.eu/"
+  />
+  <ProjectCard
+    title="Better WAPI - Web app"
+    repoUrl="http://github.com/loupeznik/better-wapi-webapp"
+    description={`A frontend for Better WAPI written in React. 
+      The application provides functionality to manage subdomains for multiple domains for the authenticated user.
+      Its aim is to provide a better UI/UX than the WEDOS dashboard while keeping the original functionality.`}
+  />
+  <ProjectCard
+    title="Ignoreinit"
+    repoUrl="http://github.com/loupeznik/ignoreinit"
+  />
+  <ProjectCard
+    title="TS3Viewer2"
+    repoUrl="http://github.com/loupeznik/ts3viewer2"
+  />
+  <ProjectCard
+    title="LEGO price tracker"
+    repoUrl="http://github.com/loupeznik/lego-price-tracker"
+    description={`A Python application which scrapes the lego.com website to track prices of LEGO sets. 
+      Uses cloud MongoDB to store the tracked items, upon price change, it notifies the user via Slack.
+      There is also an API which can be used to get the tracked items and their prices.`}
+  />
+  <ProjectCard
+    title="NotesFunction"
+    repoUrl="http://github.com/loupeznik/NotesFunction"
+    description={`An Azure Function (API style) written in .NET6 for storing notes in a CosmosDB database.
+      The function is secured by either Zitadel identity server (using introspection for validating tokens) or custom in-app authentication.`}
+  />
+  <ProjectCard
+    title="Utility scripts"
+    repoUrl="http://github.com/loupeznik/utils"
   />
 </ul>
 
 <style>
   .link-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    grid-template-columns: repeat(4, minmax(24ch, 1fr));
     gap: 2rem;
     padding: 0;
   }

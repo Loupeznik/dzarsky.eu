@@ -5,3 +5,6 @@ export type GetRepositoryResponse =
 
 export type ListRepositoryCommitsResponse =
   Endpoints["GET /repos/{owner}/{repo}/commits"]["response"];
+
+export type ListRepositoryContributorsResponse =
+  Endpoints["GET /repos/{owner}/{repo}/contributors"]["response"];

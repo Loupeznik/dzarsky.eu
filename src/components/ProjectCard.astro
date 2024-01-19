@@ -3,12 +3,13 @@ import {Octokit} from "octokit";
 import type {
   GetRepositoryResponse,
   ListRepositoryCommitsResponse,
+  ListRepositoryContributorsResponse,
 } from "../helpers/githubTypes";
+import {getRandomNumber, getMockRepositoryResponse} from "../mocks/projects";
+import {isMockModeEnabled} from "../mocks/common";
 import {
-  FiCopy,
   FiExternalLink,
   FiGitCommit,
-  FiGitMerge,
   FiGithub,
   FiStar,
   FiTag,
@@ -34,45 +35,38 @@ interface Project {
 
 const {title, repoUrl, demoUrl, description} = Astro.props;
 
-const projectName = "better-wapi";
+const projectName = repoUrl.split("/").pop() ?? "";
 
 const octokit = new Octokit();
 
-// Debug purposes only - to avoid rate limiting
+const repo = isMockModeEnabled
+  ? getMockRepositoryResponse()
+  : ((await octokit.request(
+      `GET /repos/loupeznik/${projectName}`
+    )) as GetRepositoryResponse);
 
-const repo = {
-  data: {
-    description: "A RESTful wrapper around the Wedos API written in Go",
-    stargazers_count: 1,
-    forks_count: 0,
-    language: "Go",
-    created_at: "2021-03-28T18:04:04Z",
-    topics: ["wapi", "api", "wedos"],
-    license: {
-      spdx_id: "MIT",
-    },
-  },
-} as GetRepositoryResponse;
+const contributors: ListRepositoryContributorsResponse =
+  {} as ListRepositoryContributorsResponse;
 
-const commits = {
-  data: {},
-} as ListRepositoryCommitsResponse;
+if (!isMockModeEnabled) {
+  const contributorsResponse = await octokit.request(
+    `GET /repos/loupeznik/${projectName}/contributors?per_page=100&page=1`
+  );
 
-/*
-const repo = (await octokit.request(
-  `GET /repos/loupeznik/${projectName}`
-)) as GetRepositoryResponse;
+  contributors.data = contributorsResponse.data;
+}
 
-const commits = (await octokit.request(
-  `GET /repos/loupeznik/${projectName}/commits`
-)) as ListRepositoryCommitsResponse;
-*/
+let commits = isMockModeEnabled ? getRandomNumber() : 0;
+
+contributors?.data?.forEach((contributor) => {
+  commits += contributor.contributions;
+});
 
 const project: Project = {
-  description: repo.data?.description ?? description ?? "",
+  description: description ?? repo.data?.description ?? "",
   stars: repo.data?.stargazers_count ?? 0,
   forks: repo.data?.forks_count ?? 0,
-  commitCount: commits.data?.length ?? 0,
+  commitCount: commits,
   language: repo.data?.language ?? "",
   createdAt: repo.data?.created_at,
   tags: repo.data?.topics,
@@ -86,7 +80,7 @@ const project: Project = {
     <p>{project.description}</p>
     <div>
       <p class="icon-wrapper">Stars: {project.stars} <FiStar /></p>
-      <p class="icon-wrapper">Forks: {project.forks} <FiCopy /></p>
+      <p class="icon-wrapper">Forks: {project.forks}</p>
       <p class="icon-wrapper">
         Commits: {project.commitCount}
         <FiGitCommit />
@@ -102,18 +96,19 @@ const project: Project = {
     </div>
 
     <div class="link-wrapper">
-      <span class="icon-wrapper"
-        ><FiGithub /><a href={repoUrl} target="_blank">Repo</a></span
-      >
+      <span class="icon-wrapper">
+        <a href={repoUrl} target="_blank">
+          <FiGithub />
+          <span>Repo</span>
+        </a>
+      </span>
       {
         demoUrl !== undefined && demoUrl !== "" && (
           <span class="icon-wrapper">
-            <>
+            <a href={demoUrl} target="_blank">
               <FiExternalLink />
-              <a href={demoUrl} target="_blank">
-                Demo
-              </a>
-            </>
+              <span>Demo</span>
+            </a>
           </span>
         )
       }
@@ -175,6 +170,11 @@ const project: Project = {
   a {
     color: var(--color-white);
     text-decoration: none;
+  }
+
+  a:hover {
+    opacity: 1;
+    color: rgb(var(--accent-light));
   }
 
   .icon-wrapper {
